@@ -2,21 +2,31 @@ package com.hanul.project;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import hong.ClassListVO;
+import hong.HongService;
 
 /**
  * Handles requests for the application home page.
  */
 @Controller
 public class HomeController {
+	@Autowired private HongService service;	// 이 부분은 일우꺼로 수정할 것
 	
+	// 회원가입페이지 연결 
 	@RequestMapping("new.t")
 	public String teacher() {
 		return "new";
@@ -24,21 +34,47 @@ public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
+
+	// 홈화면 연결
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
 		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		List<ClassListVO> list = null;
 		
-		String formattedDate = dateFormat.format(date);
+		list = service.class_list();
 		
-		model.addAttribute("serverTime", formattedDate );
+		model.addAttribute("list", list);
+		
+		
 		
 		return "index";
 	}
+	
+	// 에러페이지
+
+	@RequestMapping("/error")
+	public String error(HttpSession session, Model model
+						, HttpServletRequest request) {
+		
+		Throwable error
+		= (Throwable)request.getAttribute("javax.servlet.error.exception");
+		StringBuffer msg = new StringBuffer();
+		while( error!=null ) {
+			msg.append("<p>").append(error.getMessage()).append("</p>");
+			error = error.getCause();
+		}
+		//오류내용을 화면에 출력할 수 있도록 Model에 담는다
+		model.addAttribute("error", msg.toString());
+		
+		//발생한 오류에 따라 화면을 연결
+		int code 
+		= (Integer)request.getAttribute("javax.servlet.error.status_code");
+		
+		return "error/" + (code==404 ? 404 : "401");
+	}
+	
+	
+	
+	
 	
 }
