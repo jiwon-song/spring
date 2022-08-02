@@ -13,10 +13,9 @@
 	<!-- dpcp 만들고 mybatis 사용하게 할려고 하는듯 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
 	<import resource="classpath:db/common.xml"/>
 	
-	<!-- <import resource="classpath:db/common.xml"/> -->
 	
 	<!--  views에 있는 폴더 사용하게 할려고 하는듯 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  이 부분은 사용하는 폴더에 따라 수정해줘야 함-->
-<!--  	<context:component-scan base-package="hi"/>  -->
+  	<context:component-scan base-package="error, hong, include"/> 
 	
 		
 		
