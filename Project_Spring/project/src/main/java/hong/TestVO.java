@@ -2,8 +2,24 @@
 
 public class TestVO {
 	private String test_name, test_date, class_name;
-	private int count, total, avg, max;
+	private int count, total, max, class_id, test_id;
+	private double avg; 
 	
+	
+	
+
+	public int getTest_id() {
+		return test_id;
+	}
+	public void setTest_id(int test_id) {
+		this.test_id = test_id;
+	}
+	public int getClass_id() {
+		return class_id;
+	}
+	public void setClass_id(int class_id) {
+		this.class_id = class_id;
+	}
 	public String getTest_name() {
 		return test_name;
 	}
@@ -35,10 +51,11 @@ public class TestVO {
 	public void setTotal(int total) {
 		this.total = total;
 	}
-	public int getAvg() {
+
+	public double getAvg() {
 		return avg;
 	}
-	public void setAvg(int avg) {
+	public void setAvg(double avg) {
 		this.avg = avg;
 	}
 	public int getMax() {
