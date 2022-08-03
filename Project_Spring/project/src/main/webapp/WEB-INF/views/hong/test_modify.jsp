@@ -69,31 +69,39 @@
 										<th>응시날짜</th>
 										<th>최고점</th>
 										<th>평균</th>
-										<th class='col-2'>수정 / 삭제</th>
+										<th class='col-2'>확인 / 취소</th>
 									</tr>
 								</thead>
 								
 								<tbody>
 									<c:forEach items="${test_list}" var="test">
 									<tr>
-										<td>${test.test_name }</td>
+										<td>
+											<c:if test='${test_name eq test.test_name}'>
+												<input type="text" value="${test.test_name }" name="test_name"/>
+											</c:if>
+											<c:if test=' ${ test_name ne test.test_name}'>
+												${test.test_name}
+											</c:if>
+										</td>
+										
 										<td>${test.class_name}</td>
 										<td>${test.count} / ${test.total}</td>
-										<td>${test.test_date}</td>
+										<td><input type="text" value="${test.test_date}" name="test_date"/></td>
 										<td>${test.max}</td>
 										<td>${test.avg }</td>
 										<td>
 											<form class="col-6 d-inline-block" action="test_modify.ho" method="post">
 												<input type="hidden" name='class_id' value='${class_id}' />
 												<input type="hidden" name='test_id' value='${test.test_id}' />
-												<input type="hidden" name='test_name' value='${test.test_name}' />
-												<input type="hidden" name='class_name' value='${class_name}' />
-												<button type="submit" class="btn btn-primary col-10">수정</button>
+												<input type="hidden" name='test_id' value='${class_name}' />
+												<button type="submit" class="btn btn-primary col-10">확인</button>
 											</form>
-											<form class="col-5 d-inline-block" action="test_delete.ho" method="post">
+											<form class="col-5 d-inline-block" action="test_list.ho?class_id=${class_id}"  method="post">
 												<input type="hidden" name='class_id' value='${class_id}' />
+												<input type="hidden" name='class_name' value='${class_name}' />
 												<input type="hidden" name='test_id' value='${test.test_id}' />
-												<button class="btn btn-danger col-12" onclick="if(confirm('삭제하시겠습니까?')){type='submit'}else{type='button'} ">삭제</button>
+												<button  type="submit" class="btn btn-danger col-12">취소</button>
 											</form>
 										</td>
 									</tr>
