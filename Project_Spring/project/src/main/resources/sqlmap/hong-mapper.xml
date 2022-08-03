@@ -27,5 +27,34 @@ and tc.class_id = ${class_id}
 order by test_id
 </select>
 
+<!-- 테스트 전체 리스트 -->
+<select id = "testlistall" resultType="hong.TestVO">
+select c.class_name, tc.test_name, to_char(test_date, 'mm/dd') test_date, tc.test_id, count, avg, max, total
+from class c, testc tc, (select test_id, count(test_score) count, round(avg(test_score),2) avg, max(test_score) max
+                         from test
+						 group by test_id) t,
+                        (select class_name, c.class_id, total
+                         from class c, (select class_id, count(*) total 
+                                        from student
+                                        group by class_id) co
+                         where c.class_id = co.class_id(+)
+                         order by class_id) alt
+where c.class_id(+) = tc.class_id
+and tc.test_id = t.test_id(+)
+and alt.class_id = c.class_id
+order by test_id
+</select>
+
+<!-- 테스트 추가하기 -->
+<insert id="testinsert">
+insert into testc 
+values ( (select max(test_id) from testc )+1, #{test_name}, #{class_id}, #{test_date} )
+</insert>
+
+<!-- 테스트 삭제하기 -->
+<delete id="testdelete">
+delete from testc where test_id = #{test_id}
+</delete>
+
 
 </mapper>
