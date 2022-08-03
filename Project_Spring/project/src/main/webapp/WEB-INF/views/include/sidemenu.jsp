@@ -69,7 +69,7 @@
 								<!--  여기에 반복문 써서 처리 -->
 							</nav>
 						</div>
-						<a class="nav-link collapsed" href="test_list.ho?class_id=0" data-bs-toggle="collapse"
+						<a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
 							data-bs-target="#collapseLayouts3" aria-expanded="false"
 							aria-controls="collapseLayouts">
 							<div class="sb-nav-link-icon">
@@ -82,8 +82,9 @@
 						<div class="collapse" id="collapseLayouts3"
 							aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
 							<nav class="sb-sidenav-menu-nested nav">
+								<a class="nav-link" href="test_list.ho?class_id=0">전체보기</a> 
 								<c:forEach items="${list}" var="vo">
-									<a class="nav-link" href="test_list.ho?class_id=${vo.class_id}">${vo.class_name}</a> 
+									<a class="nav-link"  href="test_list.ho?class_id=${vo.class_id}&class_name=${vo.class_name}">${vo.class_name}</a> 
 								</c:forEach>
 								<!--  여기에 반복문 써서 처리 -->
 							</nav>
