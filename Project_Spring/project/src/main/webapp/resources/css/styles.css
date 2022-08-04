@@ -11699,3 +11699,31 @@ body {
   font-size: 0.75rem;
   border-radius: 0.25rem !important;
 }
+
+
+/* ----------------- 테스트 목록 스타일 ---------------*/
+
+.hong_gradient_btn{
+	background: linear-gradient(to right, #519cfe, #8da1fe, #c291fe);
+	color: #ffffff;
+}
+
+.hong_btn_blue{
+	background: #5050ff;
+	color: white;
+}
+
+/* 표 수직 가운데 정렬 : td 에 걸어줘야 함 */
+.hong_vam > tbody > tr > td{
+	vertical-align: middle;
+	height: 56px;
+}
+
+/* 수직 가운데 정렬 */
+.hong_vam{
+	vertical-align: middle;
+	margin: 0;
+}
+
+
+
