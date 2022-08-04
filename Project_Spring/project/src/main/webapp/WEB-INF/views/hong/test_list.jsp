@@ -60,7 +60,7 @@
 							<i class="fas fa-table me-1"></i> 테스트 목록
 						</div>
 						<div class="card-body">
-							<table id="datatablesSimple"> <!--  이거때문에 자동 페이징처리? -->
+							<table id="datatablesSimple" class="hong_vam"> <!--  이거때문에 자동 페이징처리? -->
 								<thead>
 									<tr>
 										<th>테스트명</th>
@@ -75,10 +75,11 @@
 								
 								<tbody>
 									<c:forEach items="${test_list}" var="test">
-									<tr>
-										<td>${test.test_name }</td>
+									<tr  class="hong_vam">
+<%--								<tr data-test='${test.test_id}'>  <!-- form 이 아니라 자바 스크립트로 데이터 보내줄 때 이렇게 데이터 넣어줌 --> --%>
+										<td><a href="test_detail.ho?test_id=${test.test_id}&test_name=${test.test_name}&class_name=${class_name}" class="text-decoration-none text-reset">${test.test_name}</a></td>
 										<td>${test.class_name}</td>
-										<td>${test.count} / ${test.total}</td>
+										<td>${test.count} / ${test.total}</td> 
 										<td>${test.test_date}</td>
 										<td>${test.max}</td>
 										<td>${test.avg }</td>
@@ -86,15 +87,16 @@
 											<form class="col-6 d-inline-block" action="test_modify.ho" method="post">
 												<input type="hidden" name='class_id' value='${class_id}' />
 												<input type="hidden" name='test_id' value='${test.test_id}' />
-												<input type="hidden" name='test_name' value='${test.test_name}' />
+<%-- 												<input type="hidden" name='test_name' value='${test.test_name}' /> --%>
 												<input type="hidden" name='class_name' value='${class_name}' />
 												<button type="submit" class="btn btn-primary col-10">수정</button>
 											</form>
 											<form class="col-5 d-inline-block" action="test_delete.ho" method="post">
 												<input type="hidden" name='class_id' value='${class_id}' />
 												<input type="hidden" name='test_id' value='${test.test_id}' />
-												<button class="btn btn-danger col-12" onclick="if(confirm('삭제하시겠습니까?')){type='submit'}else{type='button'} ">삭제</button>
+												<button class="btn btn-danger col-12" onclick="if(confirm('${test.test_name}를 삭제하시겠습니까?')){type='submit'}else{type='button'} ">삭제</button>
 											</form>
+										
 										</td>
 									</tr>
 									</c:forEach>
@@ -113,6 +115,18 @@
 	
 
  <script>
+/*  
+ $('.btn-m').click(function(){
+// 	 name='class_id' value='${class_id}' />
+// 			<input type="hidden" name='test_id' value='${test.test_id}' />
+// 			<input type="hidden" name='test_name' value='${test.test_name}' />
+// 			<input type="hidden" name='class_name' value='${class_name}' />
+	var testname = $(this).closest('tr').child('td:eq(0)').text();
+	var testdate = $(this).closest('tr').child('td:eq(3)').text();
+	var eName = '<input type="text" value="${test.test_name }" id="test_name"/>';
+	var eDate = '<input type="text" value="${test.test_name }" id="test_name"/>';
+ });
+ */
   $( function() {
 	  $( "#datepicker" ).datepicker({
 		showAnim:"slideDown",
