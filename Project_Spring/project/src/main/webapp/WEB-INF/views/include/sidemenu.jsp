@@ -79,12 +79,12 @@
 								<i class="fas fa-angle-down"></i>
 							</div>
 						</a>
-						<div class="collapse" id="collapseLayouts3"
+						<div class="collapse <c:if test='${dis eq 3}'>show</c:if>" id="collapseLayouts3"
 							aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
 							<nav class="sb-sidenav-menu-nested nav">
-								<a class="nav-link" href="test_list.ho?class_id=0">전체보기</a> 
+								<a class="nav-link" href="test_list.ho?class_id=0&dis=3">전체보기</a> 
 								<c:forEach items="${list}" var="vo">
-									<a class="nav-link"  href="test_list.ho?class_id=${vo.class_id}&class_name=${vo.class_name}">${vo.class_name}</a> 
+									<a class="nav-link"  href="test_list.ho?class_id=${vo.class_id}&class_name=${vo.class_name}&dis=3">${vo.class_name}</a> 
 								</c:forEach>
 								<!--  여기에 반복문 써서 처리 -->
 							</nav>
