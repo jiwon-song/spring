@@ -12,13 +12,13 @@ public class HongDAO {
 
 	@Autowired @Qualifier("bteam") private SqlSession sql;
 
-	public List<ClassListVO> class_list() {
-		return sql.selectList("hong.mapper.classlist");
+	public List<ClassListVO> class_list(String teacher_id) {
+		return sql.selectList("hong.mapper.classlist", teacher_id);
 	}
 
-	public List<TestVO> test_list(int class_id) {
+	public List<TestVO> test_list(int class_id, String teacher_id) {
 		if(class_id==0) {
-			return sql.selectList("hong.mapper.testlistall", class_id);						
+			return sql.selectList("hong.mapper.testlistall", teacher_id);						
 		}else {
 			return sql.selectList("hong.mapper.testlist", class_id);			
 		}
@@ -32,6 +32,16 @@ public class HongDAO {
 
 	public void test_delete(int test_id) {
 		sql.delete("hong.mapper.testdelete", test_id);		
+	}
+
+
+	public void test_update(TestVO vo) {
+		sql.update("hong.mapper.testupdate", vo);
+		
+	}
+
+	public List<TestDetailVO> test_detail(int test_id) {
+		return sql.selectList("hong.mapper.testdetail", test_id);		
 	}
 
 }
