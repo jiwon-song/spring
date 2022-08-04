@@ -5,12 +5,15 @@
 <select id = "classlist" resultType="hong.ClassListVO">
 select *
 from class
+<if test="! teacher_id.equals('admin')">
+where teacher_id = #{teacher_id}
+</if>
 order by class_id
 </select>
 
 <!-- 테스트 리스트 -->
 <select id = "testlist" resultType="hong.TestVO">
-select c.class_name, tc.test_name, to_char(test_date, 'mm/dd') test_date, tc.test_id, count, avg, max, total
+select c.class_name, tc.test_name, to_char(test_date, 'yy/mm/dd') test_date, tc.test_id, count, avg, max, total
 from class c, testc tc, (select test_id, count(test_score) count, round(avg(test_score),2) avg, max(test_score) max
                          from test
 						 group by test_id) t,
@@ -23,13 +26,13 @@ from class c, testc tc, (select test_id, count(test_score) count, round(avg(test
 where c.class_id(+) = tc.class_id
 and tc.test_id = t.test_id(+)
 and alt.class_id = c.class_id
-and tc.class_id = ${class_id}
+and tc.class_id = #{class_id}
 order by test_id
 </select>
 
 <!-- 테스트 전체 리스트 -->
 <select id = "testlistall" resultType="hong.TestVO">
-select c.class_name, tc.test_name, to_char(test_date, 'mm/dd') test_date, tc.test_id, count, avg, max, total
+select c.class_name, tc.test_name, to_char(test_date, 'yy/mm/dd') test_date, tc.test_id, count, avg, max, total
 from class c, testc tc, (select test_id, count(test_score) count, round(avg(test_score),2) avg, max(test_score) max
                          from test
 						 group by test_id) t,
@@ -42,7 +45,10 @@ from class c, testc tc, (select test_id, count(test_score) count, round(avg(test
 where c.class_id(+) = tc.class_id
 and tc.test_id = t.test_id(+)
 and alt.class_id = c.class_id
+<if test="! teacher_id.equals('admin')">
+and teacher_id= #{teacher_id}
 order by test_id
+</if>
 </select>
 
 <!-- 테스트 추가하기 -->
@@ -56,5 +62,23 @@ values ( (select max(test_id) from testc )+1, #{test_name}, #{class_id}, #{test_
 delete from testc where test_id = #{test_id}
 </delete>
 
+<!-- 테스트 수정하기 -->
+<update id="testupdate">
+update testc
+set test_name=#{test_name}, test_date=#{test_date}
+where test_id=#{test_id}
+</update>
+
+<!-- 테스트 상세 화면 -->
+<select id="testdetail" resultType="hong.TestDetailVO">
+select s.student_name, t.student_id, t.test_id, c.test_name, cl.class_name, t.test_score, t.student_test_num 
+from student s right outer join test t
+on s.student_id = t.student_id
+left outer join testc c
+on t.test_id = c.test_id
+left outer join class cl
+on c.class_id = cl.class_id
+where t.test_id = #{test_id}
+</select>
 
 </mapper>
