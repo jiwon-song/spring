@@ -34,18 +34,18 @@
 								<td>
 									<div class="input-group input-group-default">
 										<span class="input-group-text" id="inputGroup-sizing-default">테스트명</span>
-										<input type="text" name="test_name" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+										<input type="text" name="test_name" class="form-control" disabled aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
 									</div>
 								</td>
 								<td>
 									<div class="input-group input-group-default">
 										<span class="input-group-text" id="inputGroup-sizing-default">제출날짜</span>
-										<input type="text" name="test_date"  id="datepicker" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+										<input type="text" name="test_date"  class="form-control" disabled aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
 									</div>
 								</td>
-								<td class="col-4">
+								<!-- <td class="col-4">
 									<button type="submit" class="btn col-10 hong_btn_blue">테스트 추가</button>
-								</td>
+								</td> -->
 							</tr>
 
 
@@ -60,7 +60,8 @@
 							<i class="fas fa-table me-1"></i> 테스트 목록
 						</div>
 						<div class="card-body">
-							<table id="datatablesSimple"> <!--  이거때문에 자동 페이징처리? -->
+							<form action="test_update.ho">									
+							<table id="datatablesSimple" class="hong_vam"> <!--  이거때문에 자동 페이징처리? -->
 								<thead>
 									<tr>
 										<th>테스트명</th>
@@ -72,43 +73,55 @@
 										<th class='col-2'>확인 / 취소</th>
 									</tr>
 								</thead>
-								
+
 								<tbody>
 									<c:forEach items="${test_list}" var="test">
-									<tr>
-										<td>
-											<c:if test='${test_name eq test.test_name}'>
-												<input type="text" value="${test.test_name }" name="test_name"/>
-											</c:if>
-											<c:if test=' ${ test_name ne test.test_name}'>
-												${test.test_name}
-											</c:if>
-										</td>
-										
-										<td>${test.class_name}</td>
-										<td>${test.count} / ${test.total}</td>
-										<td><input type="text" value="${test.test_date}" name="test_date"/></td>
-										<td>${test.max}</td>
-										<td>${test.avg }</td>
-										<td>
-											<form class="col-6 d-inline-block" action="test_modify.ho" method="post">
-												<input type="hidden" name='class_id' value='${class_id}' />
-												<input type="hidden" name='test_id' value='${test.test_id}' />
-												<input type="hidden" name='test_id' value='${class_name}' />
-												<button type="submit" class="btn btn-primary col-10">확인</button>
-											</form>
-											<form class="col-5 d-inline-block" action="test_list.ho?class_id=${class_id}"  method="post">
-												<input type="hidden" name='class_id' value='${class_id}' />
-												<input type="hidden" name='class_name' value='${class_name}' />
-												<input type="hidden" name='test_id' value='${test.test_id}' />
-												<button  type="submit" class="btn btn-danger col-12">취소</button>
-											</form>
-										</td>
-									</tr>
+										<tr>
+											<td>
+												<c:if test='${test_id eq test.test_id}'>
+													<input class="form-control" type="text"	value="${test.test_name }" name="test_name" />
+												</c:if> 
+												<c:if test='${test_id ne test.test_id}'>
+													${test.test_name}
+												</c:if>
+											</td>
+											<td>${test.class_name}</td>
+											<td>${test.count}/ ${test.total}</td>
+
+											<td>
+												<c:if test='${test_id eq test.test_id}'>
+													<input class="form-control" type="text"	value="${test.test_date}" name="test_date" id="datepicker" />
+												</c:if> 
+												<c:if test='${test_id ne test.test_id}'>
+													${test.test_date}
+												</c:if>
+											</td>
+											<td>${test.max}</td>
+											<td>${test.avg }</td>
+
+											<td>
+												<c:if test='${test_id eq test.test_id}'>
+													
+														<input type="hidden" name='class_id' value='${class_id}' />
+														<input type="hidden" name='test_id'	value='${test.test_id}' /> 
+														<input type="hidden" name='class_name' value='${class_name}' /> 
+														<div class="col-6 d-inline-block">
+														<button type="submit" class="btn btn-primary col-10">확인</button>
+													</div>
+												</c:if> 
+												<c:if test='${test_id eq test.test_id}'>
+													<div class="col-5 d-inline-block">
+														<button class="btn btn-danger col-12" onclick='history.go(-1)'>취소</button>
+													</div>
+												</c:if>
+											</td>
+											
+										</tr>
 									</c:forEach>
 
 								</tbody>
 							</table>
+							</form>
 						</div>
 					</div>
 				</div>
