@@ -1,7 +1,11 @@
 package com.hanul.project;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import hong.ClassListVO;
+import hong.HongCheckinVO;
 import hong.HongService;
+import hong.HongStudentListVO;
 import hong.TestDetailVO;
 import hong.TestVO;
 
@@ -18,7 +24,7 @@ import hong.TestVO;
 public class HongController {
 	
 	@Autowired private HongService service;	
-	private String teacher_id = "admin";	
+	private String teacher_id = "t1";	
 	
 	// 홈화면 연결
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -127,13 +133,14 @@ public class HongController {
 	
 	
 	// 테스트 상세 화면 불러오기 ////////////////////////////////////////////////////////////////////////////////////
-	@RequestMapping("test_detail.ho")
-	public String test_detail(Model model, int test_id, String test_name, String class_name) {
+	@RequestMapping(value="test_detail.ho",  produces="text/plain;charset=UTF-8")
+	public String test_detail(Model model, int test_id, String test_name, String class_name, int class_id) {
 		
 		// 사이드 메뉴에 붙일 클래스 목록
 		List<ClassListVO> list = null;
 		list = service.class_list(teacher_id);
 		model.addAttribute("list", list);	
+		model.addAttribute("test_id", test_id);	
 
 		
 		model.addAttribute("test_name", test_name);	
@@ -145,12 +152,142 @@ public class HongController {
 		model.addAttribute("test_detail_list", test_detail_list);	
 		System.out.println(test_detail_list.size());
 		
+		// 테스트 목록 가져오기
+		List<TestVO> test_list = null;
+		test_list = service.test_list(class_id, teacher_id);
+		
+		model.addAttribute("test_list", test_list);
+		
+		
+		
 		return "hong/test_detail";
+	}
+	
+
+	// test_id 받아서 테스트명, 클래스명, 클래스 아이디 가져오기
+	@RequestMapping(value="test_id.ho" ,  produces="text/plain;charset=UTF-8")
+	public String test_id(Model model, int test_id) {
+		
+		TestVO vo = service.test_id(test_id);
+		String test_name = vo.getTest_name();
+		String class_name = vo.getClass_name();
+		int class_id = vo.getClass_id();
+		
+		try {
+			test_name = URLEncoder.encode(test_name, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			class_name = URLEncoder.encode(class_name, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		return "redirect:test_detail.ho?test_id="+test_id+"&test_name="+test_name+"&class_name="+class_name+"&class_id="+class_id;
 	}
 	
 	
 	
 	
+	
+	// iot //////////////////////////////////////////////////////////////////////////////////////////
+	
+	// iot 화면 불러오기 ( 반목록 가져오기)
+	@RequestMapping("iotReg")
+	public String iotReg( HttpServletRequest request, Model model, String class_idp, String checkcard_num) {
+		
+		if(class_idp == null) {
+			class_idp = "0";
+		}
+		int class_id = Integer.parseInt(class_idp);
+		
+		System.out.println("iotReg() 새로고침");
+		
+		checkcard_num = request.getParameter("checkcard_num");
+		System.out.println(checkcard_num);
+
+		
+		// 사이드 메뉴에 붙일 클래스 목록
+		List<ClassListVO> list = null;
+		list = service.class_list(teacher_id);
+		model.addAttribute("list", list);	
+				
+		model.addAttribute("checkcard_num", checkcard_num);
+		model.addAttribute("teacher_id", teacher_id);
+		model.addAttribute("class_id", class_id);
+		
+		// 반별 학생 목록 가져오기
+		List<HongStudentListVO> stu_list = null;
+		stu_list = service.student_list(class_id);
+		
+		if(class_id == 0) {
+			stu_list = service.student_all_list(teacher_id);
+		}
+		model.addAttribute("stu_list", stu_list);
+		
+		// 오늘 출결 리스트 가져오기
+		List<HongCheckinVO> check_list = null;
+		
+		check_list = service.check_list(teacher_id);
+		model.addAttribute("check_list", check_list);
+		
+		
+		
+		return "hong/iotReg";
+	}
+	
+	// 출결 카드 등록
+	@RequestMapping("check_insert.ho")
+	public String check_insert( HttpServletRequest request, Model model, String student_id, String checkcard_num, HongCheckinVO vo) {
+		System.out.println(checkcard_num);
+		// 이미 있는 출결 카드 번호 지우기
+		service.check_delete(checkcard_num);
+		
+		// 출결 카드 번호 추가하기
+		service.check_insert(vo);
+		
+		return "redirect:iotReg";
+	}
+	
+	// iot 출석카드 찍었을 시 작동
+	@RequestMapping("iotRegcheck")
+	public String iotRegcheck( HttpServletRequest request, Model model) {
+				
+		System.out.println("iotRegcheck() 들어옴");
+		
+		String checkcard_num = request.getParameter("sendData");
+		checkcard_num = "12121314"; // 지울것
+		System.out.println(checkcard_num);
+		
+		model.addAttribute("checkcard_num", checkcard_num);
+		
+		// 먼저 카드번호에 오늘 출석 결과가 있는지 검색
+		HongCheckinVO vo = service.check_count(checkcard_num);
+		System.out.println("count: " +vo.getCount());
+		// 카드 찍었을 시 이미 출석 있는지 검색
+		
+		if(vo.getCount() == 0) {
+			service.checkin(checkcard_num);			
+		}else if(vo.getCount() > 0) {
+			service.checkout(checkcard_num);
+		}
+		
+		
+		
+		return "redirect:iotReg";
+	}
+	
+	// 체크인 삭제하기
+		@RequestMapping("checkin_delete.ho")
+		public String checkin_delete( int class_id, int checkin_num) {
+			
+			service.checkin_delete(checkin_num);		
+			
+			return "redirect:iotReg";
+		}
+		
 	
 	
 	
