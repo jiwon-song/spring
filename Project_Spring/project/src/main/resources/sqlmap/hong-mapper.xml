@@ -71,14 +71,86 @@ where test_id=#{test_id}
 
 <!-- 테스트 상세 화면 -->
 <select id="testdetail" resultType="hong.TestDetailVO">
-select s.student_name, t.student_id, t.test_id, c.test_name, cl.class_name, t.test_score, t.student_test_num 
-from student s right outer join test t
-on s.student_id = t.student_id
-left outer join testc c
-on t.test_id = c.test_id
-left outer join class cl
-on c.class_id = cl.class_id
-where t.test_id = #{test_id}
+select ss.student_name, ss.class_name, ss.test_name, nvl(t.test_score, 0) test_score
+from 
+(select * from test where test_id =#{test_id}) t
+right outer join 
+(select student_id, student_name, test_name, class_name
+from student s right outer join testc tc
+on s.class_id = tc.class_id
+right outer join class cl
+on s.class_id = cl.class_id
+where test_id=#{test_id}) ss
+on ss.student_id = t.student_id
 </select>
 
+<!-- 학생 리스트 -->
+<select id="studentlist" resultType="hong.HongStudentListVO">
+select *
+from student
+<if test= "class_id != 0">
+where class_id = #{class_id}
+</if>
+</select>
+
+<!-- 쌤별 학생 전체 리스트 -->
+<select id="studentalllist" resultType="hong.HongStudentListVO">
+select *
+from student
+<if test="! teacher_id.equals('admin')">
+where class_id in (select class_id from class where teacher_id = #{teacher_id})
+</if>
+</select>
+<!-- 이미 있는 출결카드의 카드번호만 지우기 -->
+<update id = "checkdelete">
+update student
+set checkcard_num=null
+where checkcard_num=#{checkcard_num}
+</update>
+<!-- 출결카드 추가하기 -->
+<update id="checkinsert">
+update student
+set checkcard_num=#{checkcard_num}
+where student_id=#{student_id}
+</update>
+<!-- 카드번호에 대한 오늘 날짜의 검색 개수 -->
+<select id ="checkcount" resultType="hong.HongCheckinVO">
+select count(*) count
+from checkin
+where student_id=(select student_id from student where checkcard_num=#{checkcard_num}) and checkin_date = to_char(sysdate, 'yy/mm/dd')
+</select>
+<!-- 출석하기 -->
+<insert id="checkin">
+insert into checkin
+values((select student_id from student where checkcard_num=#{checkcard_num}), to_char(sysdate, 'yy/mm/dd'), sysdate, sysdate, (select max(checkin_num) from checkin)+1)
+</insert>
+<!-- 퇴실하기 -->
+<update id="checkout">
+update checkin
+set checkout_hour = sysdate
+where student_id=(select student_id from student where checkcard_num=#{checkcard_num}) and checkin_date = to_char(sysdate, 'yy/mm/dd')
+</update>
+<!-- 출석목록 가져오기 -->
+<select id="check_list" resultType="hong.HongCheckinVO">
+select checkin_num, to_char(checkin_date, 'yy/mm/dd') checkin_date, to_char(checkin_hour, 'hh:mi:ss') checkin_hour, to_char(checkout_hour, 'hh:mi:ss') checkout_hour, s.student_name, cl.class_name
+from checkin c left outer join student s 
+on c.student_id = s.student_id
+left outer join class cl
+on cl.class_id = s.class_id
+where checkin_date= to_char(sysdate, 'yy/mm/dd')
+<if test="! teacher_id.equals('admin')">
+and teacher_id = #{teahcer_id}
+</if>
+</select>
+<!-- 출석목록 지우기 -->
+<delete id="checkin_delete">
+delete from checkin where checkin_num=#{checkin_num}
+</delete>
+<!-- test_id 이용해서 클래스이름과 테스트 이름 가져오기 -->
+<select id="test_id" resultType="hong.TestVO">
+select test_name, test_id, class_name, c.class_id
+from testc t left outer join class c
+on c.class_id = t.class_id
+where test_id=#{test_id}
+</select>
 </mapper>
