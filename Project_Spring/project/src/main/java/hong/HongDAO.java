@@ -44,4 +44,46 @@ public class HongDAO {
 		return sql.selectList("hong.mapper.testdetail", test_id);		
 	}
 
+	public List<HongStudentListVO> student_list(int class_id) {
+		return sql.selectList("hong.mapper.studentlist", class_id);
+	}
+
+	public List<HongStudentListVO> student_all_list(String teacher_id) {
+		return sql.selectList("hong.mapper.studentalllist", teacher_id);
+	}
+
+	// 출결카드 등록하기
+	public void check_insert(HongCheckinVO vo) {
+		sql.update("hong.mapper.checkinsert", vo);		
+	}
+
+	public void check_delete(String checkcard_num) {
+		sql.update("hong.mapper.checkdelete",checkcard_num);
+	}
+
+	public HongCheckinVO check_count(String checkcard_num) {
+		return sql.selectOne("hong.mapper.checkcount", checkcard_num);
+	}
+
+	// 출석하기
+	public void checkin(String checkcard_num) {
+		sql.insert("hong.mapper.checkin",checkcard_num);
+	}
+
+	public void checkout(String checkcard_num) {
+		sql.update("hong.mapper.checkout", checkcard_num);
+	}
+
+	public List<HongCheckinVO> check_list(String teacher_id) {
+		return sql.selectList("hong.mapper.check_list", teacher_id);
+	}
+
+	public void checkin_delete(int checkin_num) {
+		sql.delete("hong.mapper.checkin_delete", checkin_num);
+	}
+
+	public TestVO test_id(int test_id) {
+		return sql.selectOne("hong.mapper.test_id", test_id);
+	}
+
 }

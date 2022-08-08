@@ -39,6 +39,49 @@ public class HongService {
 		return dao.test_detail(test_id);
 	}
 
+	public List<HongStudentListVO> student_list(int class_id) {
+		return dao.student_list(class_id);
+	}
+
+	public List<HongStudentListVO> student_all_list(String teacher_id) {
+		return dao.student_all_list(teacher_id);
+	}
+
+	public void check_insert(HongCheckinVO vo) {
+		dao.check_insert(vo);
+	}
+
+	public void check_delete(String checkcard_num) {
+		dao.check_delete(checkcard_num);
+	}
+
+	// 카드번호에 대한 오늘 출결 결과 검색
+	public HongCheckinVO check_count(String checkcard_num) {
+		return dao.check_count(checkcard_num);
+	}
+
+	// 입실처리
+	public void checkin(String checkcard_num) {
+		dao.checkin(checkcard_num);		
+	}
+
+	// 퇴실처리
+	public void checkout(String checkcard_num) {
+		dao.checkout(checkcard_num);
+	}
+
+	public List<HongCheckinVO> check_list(String teacher_id) {
+		return dao.check_list(teacher_id);
+	}
+
+	public void checkin_delete(int checkin_num) {
+		dao.checkin_delete(checkin_num);
+	}
+
+	public TestVO test_id(int test_id) {
+		return dao.test_id(test_id);
+	}
+
 	
 	
 
