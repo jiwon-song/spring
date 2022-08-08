@@ -34,7 +34,7 @@
 								<td>
 									<div class="input-group input-group-default">
 										<span class="input-group-text" id="inputGroup-sizing-default">테스트명</span>
-										<input type="text" name="test_name" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+										<input <c:if test = '${class_id==0}' >disabled </c:if> type="text" name="test_name" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
 									</div>
 								</td>
 								<td>
@@ -44,7 +44,7 @@
 									</div>
 								</td>
 								<td class="col-4">
-									<button type="submit" class="btn col-10 hong_btn_blue">테스트 추가</button>
+									<button type="submit" <c:if test = '${class_id==0}' >disabled </c:if> class="btn col-10 hong_btn_blue">테스트 추가</button>
 								</td>
 							</tr>
 
@@ -77,7 +77,7 @@
 									<c:forEach items="${test_list}" var="test">
 									<tr  class="hong_vam">
 <%--								<tr data-test='${test.test_id}'>  <!-- form 이 아니라 자바 스크립트로 데이터 보내줄 때 이렇게 데이터 넣어줌 --> --%>
-										<td><a href="test_detail.ho?test_id=${test.test_id}&test_name=${test.test_name}&class_name=${class_name}" class="text-decoration-none text-reset">${test.test_name}</a></td>
+										<td><a href="test_detail.ho?test_id=${test.test_id}&test_name=${test.test_name}&class_name=${class_name}&class_id=${class_id}" class="text-decoration-none text-reset">${test.test_name}</a></td>
 										<td>${test.class_name}</td>
 										<td>${test.count} / ${test.total}</td> 
 										<td>${test.test_date}</td>

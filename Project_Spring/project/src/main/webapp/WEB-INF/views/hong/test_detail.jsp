@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
     
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="ko">
 <%@ include file="../include/head.jsp" %>
@@ -29,25 +29,20 @@
 					
 					<form action="test_detail_insert.ho" method="post">
 				 		<input type="hidden" name='class_id' value='${class_id}' />
-						<table class="table table-borderless w-75">
+						<table class="table table-borderless w-25">
 							<tr>
 								<td>
 									<div class="input-group input-group-default">
-										<span class="input-group-text" id="inputGroup-sizing-default">학생이름</span>
-										<input type="text" name="test_name" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+										<span class="input-group-text" id="inputGroup-sizing-default">테스트명</span>
+										<select class="form-select" id="inputGroupSelect01" onchange="window.open(value,'_self');">
+											<c:forEach items="${test_list}" var="list">
+												<option	 <c:if test = "${list.test_id eq test_id}">selected </c:if>  value="test_id.ho?test_id=${list.test_id}">${list.test_name}</option>
+											</c:forEach>
+										</select>
 									</div>
 								</td>
-								<td>
-									<div class="input-group input-group-default">
-										<span class="input-group-text" id="inputGroup-sizing-default">제출날짜</span>
-										<input type="text" name="test_date"  id="datepicker" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
-									</div>
-								</td>
-								<td class="col-4">
-									<button type="submit" class="btn col-10 hong_btn_blue">테스트 추가</button>
-								</td>
-							</tr>
 
+							</tr>
 
 						</table>
 					</form>
@@ -80,8 +75,8 @@
 										<td>${t.test_name}</td> 
 										<td>${t.test_score}</td>
 										<td>
-											<c:if test='${t.test_score != null}'>제출</c:if> 
-											<c:if test='${t.test_score == null}'>미제출</c:if> 										
+											<c:if test='${t.test_score != 0}'>제출</c:if> 
+											<c:if test='${t.test_score == 0}'>미제출</c:if> 										
 										</td>
 										<td>
 											<form class="col-6 d-inline-block" action="test_modify.ho" method="post">
