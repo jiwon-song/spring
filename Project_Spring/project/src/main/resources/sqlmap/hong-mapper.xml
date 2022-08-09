@@ -71,7 +71,7 @@ where test_id=#{test_id}
 
 <!-- 테스트 상세 화면 -->
 <select id="testdetail" resultType="hong.TestDetailVO">
-select ss.student_name, ss.class_name, ss.test_name, nvl(t.test_score, 0) test_score
+select ss.student_name, ss.class_name, ss.test_name, nvl(t.test_score, 0) test_score, ss.student_id
 from 
 (select * from test where test_id =#{test_id}) t
 right outer join 
@@ -82,6 +82,7 @@ right outer join class cl
 on s.class_id = cl.class_id
 where test_id=#{test_id}) ss
 on ss.student_id = t.student_id
+order by ss.student_name
 </select>
 
 <!-- 학생 리스트 -->
@@ -122,7 +123,7 @@ where student_id=(select student_id from student where checkcard_num=#{checkcard
 <!-- 출석하기 -->
 <insert id="checkin">
 insert into checkin
-values((select student_id from student where checkcard_num=#{checkcard_num}), to_char(sysdate, 'yy/mm/dd'), sysdate, sysdate, (select max(checkin_num) from checkin)+1)
+values((select student_id from student where checkcard_num=#{checkcard_num}), to_char(sysdate, 'yy/mm/dd'), sysdate, null, (select max(checkin_num) from checkin)+1)
 </insert>
 <!-- 퇴실하기 -->
 <update id="checkout">
@@ -153,4 +154,29 @@ from testc t left outer join class c
 on c.class_id = t.class_id
 where test_id=#{test_id}
 </select>
+<!-- 출석카드 정보가 DB에 있는지 체크 -->
+<select id="doublecheck" resultType="hong.HongCheckinVO">
+select count(*) checkc
+from student
+where checkcard_num = #{checkcard_num}
+</select>
+<!-- 해당 학생의 시험정보가 존재하는지 검색 -->
+<select id="test_count" resultType="int">
+select count(*) countt
+from test
+where student_id=#{student_id}
+and test_id = #{test_id}
+</select>
+<!-- 테스트 상세화면 수정 -->
+<update id="test_detail_update">
+update test
+set test_score=#{test_score}
+where student_id=#{student_id} 
+and test_id = #{test_id}
+</update>
+<!-- 테스트 학생 점수 추가 -->
+<insert id ="test_detail_insert">
+insert into test
+values (#{test_id}, #{student_id}, #{test_score}, (select max(student_test_num) from test)+1 )
+</insert>
 </mapper>
