@@ -45,7 +45,7 @@
 										</div>
 									</div>
 								</td>
-								<td>
+								<td class="col-2">
 									<div class="input-group input-group-default">
 										<span class="input-group-text" id="inputGroup-sizing-default">학생이름</span>
 										<select class="form-select" id="inputGroupSelect01" name="student_id">
@@ -102,9 +102,16 @@
 											${fn:substring(check.checkin_hour, 3, 5)}분
 											${fn:substring(check.checkin_hour, 6, 8)}초									
 										</td>
-										<td>${fn:substring(check.checkout_hour, 0, 2)}시
+										<td>
+											<c:if test ='${check.checkout_hour != null}'>
+											${fn:substring(check.checkout_hour, 0, 2)}시
 											${fn:substring(check.checkout_hour, 3, 5)}분
-											${fn:substring(check.checkout_hour, 6, 8)}초									
+											${fn:substring(check.checkout_hour, 6, 8)}초
+											</c:if>																	
+											<c:if test ='${check.checkout_hour == null}'>
+												퇴실 안함
+											</c:if>
+																				
 										</td>
 										<td>
 											

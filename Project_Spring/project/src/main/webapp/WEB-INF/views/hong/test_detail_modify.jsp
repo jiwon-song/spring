@@ -55,44 +55,50 @@
 							<i class="fas fa-table me-1"></i> 테스트명 : ${test_name }
 						</div>
 						<div class="card-body">
-							<table id="datatablesSimple" class="hong_vam"> <!--  이거때문에 자동 페이징처리? -->
-								<thead>
-									<tr>
-										<th>학생이름</th>
-										<th>반이름</th>
-										<th>테스트명</th>
-										<th>점수</th>
-										<th>응시여부</th>
-										<th class='col-2'>수정 </th>
-									</tr>
-								</thead>
-								
-								<tbody>
-									<c:forEach items="${test_detail_list}" var="t">
-									<tr  class="hong_vam">
-										<td>${t.student_name}</td>
-										<td class="col-2">${t.class_name}</td>
-										<td>${t.test_name}</td> 
-										<td>${t.test_score}</td>
-										<td>
-											<c:if test='${t.test_score != 0}'>제출</c:if> 
-											<c:if test='${t.test_score == 0}'>미제출</c:if> 										
-										</td>
-										<td>
-											<form class="col-12 d-inline-block" action="test_detail_modify.ho" method="post">
-												
-												<input type="hidden" name='student_id' value='${t.student_id}' />
-												<input type="hidden" name='test_id' value='${test_id}' />
-												<button type="submit" class="btn hong_btn_blue col-12">수정</button>
-											</form>
-								
-										
-										</td>
-									</tr>
-									</c:forEach>
+							<form action="test_detail_update.ho" method="post">
+								<table id="datatablesSimple" class="hong_vam">
+									<!--  이거때문에 자동 페이징처리? -->
+									<thead>
+										<tr>
+											<th>학생이름</th>
+											<th>반이름</th>
+											<th>테스트명</th>
+											<th>점수</th>
+											<th>응시여부</th>
+											<th class='col-2'>확인 / 취소</th>
+										</tr>
+									</thead>
 
-								</tbody>
-							</table>
+									<tbody>
+										<c:forEach items="${test_detail_list}" var="t">
+											<tr class="hong_vam">
+												<td>${t.student_name}</td>
+												<td class="col-2">${t.class_name}</td>
+												<td>${t.test_name}</td>
+												<td class="col-1">
+													<c:if test="${t.student_id eq student_id }">
+													<input class="form-control" type="text" name="test_score" value="${t.test_score}" />
+													</c:if>	
+													<c:if test="${t.student_id ne student_id }">
+														${t.test_score}
+													</c:if>
+												</td>
+												<td><c:if test='${t.test_score != 0}'>제출</c:if> 
+													<c:if test='${t.test_score == 0}'>미제출</c:if></td>
+												<td>
+													<c:if test="${t.student_id eq student_id }">
+														<input type="hidden" name="student_id" value="${t.student_id}" />
+														<input type="hidden" name="test_id" value="${test_id}" />
+														<button type="submit" class="btn hong_btn_blue col-5">확인</button>
+														<div class="col-1 d-inline-block"></div>
+														<a class="btn hong_btn_red col-5" onclick="history.go(-1)">취소</a>
+													</c:if>
+												</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							</form>
 						</div>
 					</div>
 				</div>

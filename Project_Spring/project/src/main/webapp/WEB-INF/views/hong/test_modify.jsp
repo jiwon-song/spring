@@ -111,7 +111,7 @@
 												</c:if> 
 												<c:if test='${test_id eq test.test_id}'>
 													<div class="col-5 d-inline-block">
-														<button class="btn btn-danger col-12" onclick='history.go(-1)'>취소</button>
+														<a class="btn btn-danger col-12" onclick="history.go(-1)">취소</a>
 													</div>
 												</c:if>
 											</td>
