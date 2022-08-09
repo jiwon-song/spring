@@ -3,9 +3,15 @@ package hong;
 public class HongCheckinVO {
 
 	String student_id, checkin_date, checkin_hour, checkout_hour, checkcard_num, class_name, student_name;
-	int checkin_num, count;
+	int checkin_num, count, checkc;
 	
 	
+	public int getCheckc() {
+		return checkc;
+	}
+	public void setCheckc(int checkc) {
+		this.checkc = checkc;
+	}
 	public String getStudent_name() {
 		return student_name;
 	}

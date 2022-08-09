@@ -2,9 +2,15 @@ package hong;
 
 public class HongStudentListVO {
 	
-	String student_id, student_pw, student_name, school_id, parent_phone, student_phone;
+	String student_id, student_pw, student_name, school_id, parent_phone, student_phone, checkcard_num;
 	int grade, class_id;
 	
+	public String getCheckcard_num() {
+		return checkcard_num;
+	}
+	public void setCheckcard_num(String checkcard_num) {
+		this.checkcard_num = checkcard_num;
+	}
 	
 	public String getStudent_id() {
 		return student_id;

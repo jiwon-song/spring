@@ -82,6 +82,23 @@ public class HongService {
 		return dao.test_id(test_id);
 	}
 
+	// 출석카드 정보가 DB에 있는지 확인
+	public HongCheckinVO doublecheck(String checkcard_num) {
+		return dao.doublecheck(checkcard_num);
+	}
+
+	public void test_detail_update(TestDetailVO dvo) {
+		dao.test_detail_update(dvo);
+	}
+
+	public int test_count(TestDetailVO dvo) {
+		return dao.test_count(dvo);
+	}
+
+	public void test_detail_insert(TestDetailVO dvo) {
+		dao.test_detail_insert(dvo);
+	}
+
 	
 	
 

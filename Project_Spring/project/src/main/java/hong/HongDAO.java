@@ -86,4 +86,20 @@ public class HongDAO {
 		return sql.selectOne("hong.mapper.test_id", test_id);
 	}
 
+	public HongCheckinVO doublecheck(String checkcard_num) {
+		return sql.selectOne("hong.mapper.doublecheck",checkcard_num);
+	}
+
+	public void test_detail_update(TestDetailVO dvo) {
+		sql.update("hong.mapper.test_detail_update", dvo);
+	}
+
+	public int test_count(TestDetailVO dvo) {
+		return sql.selectOne("hong.mapper.test_count",dvo);
+	}
+
+	public void test_detail_insert(TestDetailVO dvo) {
+		sql.insert("hong.mapper.test_detail_insert", dvo);
+	}
+
 }
